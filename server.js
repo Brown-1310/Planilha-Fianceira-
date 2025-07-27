@@ -1,15 +1,21 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const cors = require('cors'); // ✅ importa o CORS
 const transactionRoutes = require('./routes/transactions');
-//Importando 
 
 dotenv.config(); // Carrega as variáveis do .env
 
-const app = express(); // Criando o express
-app.use(express.json()); // Permite que a API leia Json no corpo da requisição
+const app = express();
 
-app.use('/api/transactions', transactionRoutes); // Usa as rotas a partir do caminho /api/transactions  
+// Aplica CORS para permitir requisições do navegador
+app.use(cors());
+
+// Middleware para ler JSON no corpo das requisições
+app.use(express.json());
+
+// Rota para transações
+app.use('/api/transactions', transactionRoutes);
 
 // Conexão com o MongoDB
 mongoose.connect(process.env.MONGO_URI, {
@@ -19,11 +25,13 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log('Conectado ao MongoDB'))
 .catch((err) => console.error('Erro ao conectar ao MongoDB:', err));
 
-// Inicia o servidor na porta 3000
+// Inicia o servidor
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
+
+
 
 
 
