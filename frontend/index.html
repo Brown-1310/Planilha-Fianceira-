@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Controle Financeiro</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Controle Financeiro</h1>
+
+  <!-- Formulário de Entrada -->
+  <form id="income-form">
+    <h2>Entrada de Dinheiro</h2>
+    <input type="text" name="description" placeholder="Descrição" required />
+    <input type="number" name="value" placeholder="Valor" step="0.01" required />
+    <button type="submit">Adicionar Entrada</button>
+  </form>
+
+  <!-- Formulário de Despesa -->
+  <form id="expense-form">
+    <h2>Despesas</h2>
+    <select name="subtype" required>
+      <option value="">Selecione tipo</option>
+      <option value="fixa">Fixa</option>
+      <option value="variavel">Variável</option>
+      <option value="previsao">Previsão</option>
+    </select>
+    <input type="text" name="description" placeholder="Descrição" required />
+    <input type="number" name="value" placeholder="Valor" step="0.01" required />
+    <button type="submit">Adicionar Despesa</button>
+  </form>
+
+  <script src="script.js"></script>
+</body>
+</html>
