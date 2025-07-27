@@ -1,12 +1,15 @@
-// server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const transactionRoutes = require('./routes/transactions');
+//Importando 
 
-dotenv.config();
+dotenv.config(); // Carrega as variáveis do .env
 
-const app = express();
-app.use(express.json());
+const app = express(); // Criando o express
+app.use(express.json()); // Permite que a API leia Json no corpo da requisição
+
+app.use('/api/transactions', transactionRoutes); // Usa as rotas a partir do caminho /api/transactions  
 
 // Conexão com o MongoDB
 mongoose.connect(process.env.MONGO_URI, {
@@ -16,12 +19,12 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log('Conectado ao MongoDB'))
 .catch((err) => console.error('Erro ao conectar ao MongoDB:', err));
 
-// Rota de teste
-app.get('/', (req, res) => {
-  res.send('API Controle Financiro rodando!');
-});
-
+// Inicia o servidor na porta 3000
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
+
+
+
+
