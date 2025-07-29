@@ -1,61 +1,49 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 function ExpenseForm({ months }) {
-  const [subtype, setSubtype] = useState('');
-  const [description, setDescription] = useState('');
-  const [value, setValue] = useState('');
+  const [description, setDescription] = useState("");
+  const [subtype, setSubtype] = useState("fixa");
 
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!months.length) {
-      alert("Adicione ao menos um mês antes de incluir uma despesa.");
-      return;
-    }
+    if (!description || !subtype) return;
 
-    const transaction = {
-      type: "expense",
-      subtype,
-      description,
-      value: parseFloat(value),
-      date: months[0], // para este exemplo: primeiro mês
-    };
+    const transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 
-    const stored = JSON.parse(localStorage.getItem('transactions')) || [];
-    localStorage.setItem('transactions', JSON.stringify([...stored, transaction]));
+    months.forEach((month) => {
+      transactions.push({
+        type: "expense",
+        subtype,
+        description,
+        value: 0,
+        date: new Date(`${month}-01`).toISOString(),
+      });
+    });
 
-    setSubtype('');
-    setDescription('');
-    setValue('');
-  }
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+    setDescription("");
+    setSubtype("fixa");
+    window.location.reload();
+  };
 
   return (
-    <div>
-      <h3>Incluir Despesa</h3>
-      <form onSubmit={handleSubmit}>
-        <select value={subtype} onChange={(e) => setSubtype(e.target.value)} required>
-          <option value="">Tipo de Despesa</option>
-          <option value="fixa">Fixa</option>
-          <option value="variavel">Variável</option>
-          <option value="previsao">Previsão</option>
-        </select>
-        <input
-          type="text"
-          placeholder="Descrição"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          required
-        />
-        <input
-          type="number"
-          placeholder="Valor"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          required
-        />
-        <button type="submit">Incluir</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit} style={{ marginTop: "20px" }}>
+      {/* <h2>Incluir Despesa</h2> foi removido */}
+      <select value={subtype} onChange={(e) => setSubtype(e.target.value)} required>
+        <option value="fixa">Fixa</option>
+        <option value="variavel">Variável</option>
+        <option value="previsao">Previsão</option>
+      </select>
+      <input
+        type="text"
+        placeholder="Descrição da despesa"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        required
+      />
+      <button type="submit">Incluir</button>
+    </form>
   );
 }
 

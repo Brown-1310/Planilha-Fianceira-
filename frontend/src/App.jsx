@@ -7,7 +7,14 @@ import CardManager from './components/CardManager';
 import CardPurchaseForm from './components/CardPurchaseForm';
 
 function App() {
-  const [months, setMonths] = useState([]);
+  // Inicializa com os próximos 12 meses
+  const [months, setMonths] = useState(() => {
+    const today = new Date();
+    return Array.from({ length: 12 }, (_, i) => {
+      const date = new Date(today.getFullYear(), today.getMonth() + i, 1);
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    });
+  });
 
   return (
     <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "20px" }}>
@@ -29,7 +36,7 @@ function App() {
       </section>
 
       {/* Tabela de Finanças */}
-      <FinanceTable months={months} />
+      <FinanceTable months={months} setMonths={setMonths} />
 
       <hr style={{ margin: "40px 0" }} />
 

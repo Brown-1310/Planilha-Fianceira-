@@ -1,52 +1,41 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 function IncomeForm({ months }) {
-  const [description, setDescription] = useState('');
-  const [value, setValue] = useState('');
+  const [description, setDescription] = useState("");
 
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!months.length) {
-      alert("Adicione ao menos um mês antes de incluir uma receita.");
-      return;
-    }
+    if (!description) return;
 
-    const transaction = {
-      type: "income",
-      description,
-      value: parseFloat(value),
-      date: months[0], // para este exemplo: primeiro mês
-    };
+    const transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 
-    const stored = JSON.parse(localStorage.getItem('transactions')) || [];
-    localStorage.setItem('transactions', JSON.stringify([...stored, transaction]));
+    months.forEach((month) => {
+      transactions.push({
+        type: "income",
+        description,
+        value: 0,
+        date: new Date(`${month}-01`).toISOString(),
+      });
+    });
 
-    setDescription('');
-    setValue('');
-  }
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+    setDescription("");
+    window.location.reload();
+  };
 
   return (
-    <div>
-      <h3>Incluir Receita</h3>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Descrição"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          required
-        />
-        <input
-          type="number"
-          placeholder="Valor"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          required
-        />
-        <button type="submit">Incluir</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit} style={{ marginTop: "20px" }}>
+      {/* <h2>Incluir Receita</h2> foi removido */}
+      <input
+        type="text"
+        placeholder="Descrição da receita"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        required
+      />
+      <button type="submit">Incluir</button>
+    </form>
   );
 }
 
